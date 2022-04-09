@@ -27,7 +27,7 @@ RegisterNetEvent('qb-weathersync:client:DisableSync', function()
 			SetWeatherTypePersist('CLEAR')
 			SetWeatherTypeNow('CLEAR')
 			SetWeatherTypeNowPersist('CLEAR')
-			NetworkOverrideClockTime(18, 0, 0)
+			--NetworkOverrideClockTime(18, 0, 0)
 			Wait(5000)
 		end
 	end)
@@ -57,11 +57,11 @@ RegisterNetEvent('qb-weathersync:client:RequestCommands', function(isAllowed)
     end
 end)
 
-RegisterNetEvent('qb-weathersync:client:SyncTime', function(base, offset, freeze)
-    freezeTime = freeze
-    timeOffset = offset
-    baseTime = base
-end)
+-- RegisterNetEvent('qb-weathersync:client:SyncTime', function(base, offset, freeze)
+--     freezeTime = freeze
+--     timeOffset = offset
+--     baseTime = base
+-- end)
 
 CreateThread(function()
     while true do
@@ -99,31 +99,31 @@ CreateThread(function()
     end
 end)
 
-CreateThread(function()
-    local hour = 0
-    local minute = 0
-    local second = 0        --Add seconds for shadow smoothness
-    while true do
-        if not disable then
-            Wait(0)
-            local newBaseTime = baseTime
-            if GetGameTimer() - 22  > timer then    --Generate seconds in client side to avoid communiation
-                second = second + 1                 --Minutes are sent from the server every 2 seconds to keep sync
-                timer = GetGameTimer()
-            end
-            if freezeTime then
-                timeOffset = timeOffset + baseTime - newBaseTime
-                second = 0
-            end
-            baseTime = newBaseTime
-            hour = math.floor(((baseTime+timeOffset)/60)%24)
-            if minute ~= math.floor((baseTime+timeOffset)%60) then  --Reset seconds to 0 when new minute
-                minute = math.floor((baseTime+timeOffset)%60)
-                second = 0
-            end
-            NetworkOverrideClockTime(hour, minute, second)          --Send hour included seconds to network clock time
-        else
-            Wait(1000)
-        end
-    end
-end)
+-- CreateThread(function()
+--     local hour = 0
+--     local minute = 0
+--     local second = 0        --Add seconds for shadow smoothness
+--     while true do
+--         if not disable then
+--             Wait(0)
+--             local newBaseTime = baseTime
+--             if GetGameTimer() - 22  > timer then    --Generate seconds in client side to avoid communiation
+--                 second = second + 1                 --Minutes are sent from the server every 2 seconds to keep sync
+--                 timer = GetGameTimer()
+--             end
+--             if freezeTime then
+--                 timeOffset = timeOffset + baseTime - newBaseTime
+--                 second = 0
+--             end
+--             baseTime = newBaseTime
+--             hour = math.floor(((baseTime+timeOffset)/60)%24)
+--             if minute ~= math.floor((baseTime+timeOffset)%60) then  --Reset seconds to 0 when new minute
+--                 minute = math.floor((baseTime+timeOffset)%60)
+--                 second = 0
+--             end
+--             NetworkOverrideClockTime(hour, minute, second)          --Send hour included seconds to network clock time
+--         else
+--             Wait(1000)
+--         end
+--     end
+-- end)

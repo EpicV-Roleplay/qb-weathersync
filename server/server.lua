@@ -152,17 +152,17 @@ RegisterNetEvent('qb-weathersync:server:setWeather', function(weather)
     end
 end)
 
-RegisterNetEvent('qb-weathersync:server:setTime', function(hour, minute)
-    local src = getSource(source)
-    if isAllowedToChange(src) then
-        local success = setTime(hour, minute)
-        if src > 0 then
-            if (success) then TriggerClientEvent('QBCore:Notify', src, Lang:t('time.change', {value = hour, value2 = minute or "00"}))
-            else TriggerClientEvent('QBCore:Notify', src, Lang:t('time.invalid'))
-            end
-        end
-    end
-end)
+-- RegisterNetEvent('qb-weathersync:server:setTime', function(hour, minute)
+--     local src = getSource(source)
+--     if isAllowedToChange(src) then
+--         local success = setTime(hour, minute)
+--         if src > 0 then
+--             if (success) then TriggerClientEvent('QBCore:Notify', src, Lang:t('time.change', {value = hour, value2 = minute or "00"}))
+--             else TriggerClientEvent('QBCore:Notify', src, Lang:t('time.invalid'))
+--             end
+--         end
+--     end
+-- end)
 
 RegisterNetEvent('qb-weathersync:server:toggleBlackout', function(state)
     local src = getSource(source)
@@ -202,18 +202,18 @@ end)
 
 -- COMMANDS
 
-RegisterCommand('freezetime', function(source, args, rawCommand)
-    if isAllowedToChange(source) then
-        local newstate = setTimeFreeze()
-        if source > 0 then
-            if (newstate) then return TriggerClientEvent('QBCore:Notify', source, Lang:t('time.frozenc')) end
-            return TriggerClientEvent('QBCore:Notify', source, Lang:t('time.unfrozenc'))
-        end
-        if (newstate) then return print(Lang:t('time.now_frozen')) end
-        return print(Lang:t('time.now_unfrozen'))
-    end
-    TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_allowed'), 'error')
-end)
+-- RegisterCommand('freezetime', function(source, args, rawCommand)
+--     if isAllowedToChange(source) then
+--         local newstate = setTimeFreeze()
+--         if source > 0 then
+--             if (newstate) then return TriggerClientEvent('QBCore:Notify', source, Lang:t('time.frozenc')) end
+--             return TriggerClientEvent('QBCore:Notify', source, Lang:t('time.unfrozenc'))
+--         end
+--         if (newstate) then return print(Lang:t('time.now_frozen')) end
+--         return print(Lang:t('time.now_unfrozen'))
+--     end
+--     TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_allowed'), 'error')
+-- end)
 
 RegisterCommand('freezeweather', function(source, args, rawCommand)
     if isAllowedToChange(source) then
@@ -316,27 +316,27 @@ end)
 
 -- THREAD LOOPS
 
-CreateThread(function()
-    local previous = 0
-    while true do
-        Wait(0)
-        local newBaseTime = os.time(os.date("!*t"))/2 + 360         --Set the server time depending of OS time
-        if (newBaseTime % 60) ~= previous then                      --Check if a new minute is passed
-            previous = newBaseTime % 60                             --Only update time with plain minutes, seconds are handled in the client
-            if freezeTime then
-                timeOffset = timeOffset + baseTime - newBaseTime
-            end
-            baseTime = newBaseTime
-        end
-    end
-end)
+-- CreateThread(function()
+--     local previous = 0
+--     while true do
+--         Wait(0)
+--         local newBaseTime = os.time(os.date("!*t"))/2 + 360         --Set the server time depending of OS time
+--         if (newBaseTime % 60) ~= previous then                      --Check if a new minute is passed
+--             previous = newBaseTime % 60                             --Only update time with plain minutes, seconds are handled in the client
+--             if freezeTime then
+--                 timeOffset = timeOffset + baseTime - newBaseTime
+--             end
+--             baseTime = newBaseTime
+--         end
+--     end
+-- end)
 
-CreateThread(function()
-    while true do
-        Wait(2000)                                          --Change to send every minute in game sync
-        TriggerClientEvent('qb-weathersync:client:SyncTime', -1, baseTime, timeOffset, freezeTime)
-    end
-end)
+-- CreateThread(function()
+--     while true do
+--         Wait(2000)                                          --Change to send every minute in game sync
+--         TriggerClientEvent('qb-weathersync:client:SyncTime', -1, baseTime, timeOffset, freezeTime)
+--     end
+-- end)
 
 CreateThread(function()
     while true do
